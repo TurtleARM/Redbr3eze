@@ -20,6 +20,10 @@ Public Class iRecovery
         SaveToDisk("iRecovery.exe", mainsb.dir & "\iRecovery.exe")
 
     End Sub
+ Public Function enterrecovery()
+        Process.Start(mainsb.dir & "\Enter.exe");
+        MsgBox("Done :D", MsgBoxStyle.Information)
+    End Function
     Public Function exitrecovery()
         SaveToDisk("s-irecovery.exe", mainsb.dir & "\s-irecovery.exe")
 
