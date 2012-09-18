@@ -21,7 +21,7 @@ Public Class iRecovery
 
     End Sub
  Public Function enterrecovery()
-        Process.Start(mainsb.dir & "\Enter.exe");
+        Process.Start(mainsb.dir & "\Enter.exe")
         MsgBox("Done :D", MsgBoxStyle.Information)
     End Function
     Public Function exitrecovery()
