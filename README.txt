@@ -1,1 +1,1 @@
-Visit Redbr3eze official Website: http://redbr3eze.altervista.org
+Visit Redbr3eze official Website to get the latest version: http://oncepublicyreleased
