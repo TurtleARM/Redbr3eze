@@ -98,9 +98,11 @@ Public Class ebuilding2
 
 
         If Customoptions.add_deb = True Then
-
-            mainsb.hfsplus_add(mainsb.dir & "\IPSW\DECRYPTED.dmg", mainsb.dir & "\debs\private\var\root\Media\Cydia\AutoInstall\package" & Customoptions.cont4 & ".deb", "/var/root/Media/Cydia/AutoInstall/" & Customoptions.cont4 & ".deb")
-
+            Label1.Text = "Adding Custom Debs..."
+            mainsb.hfsplus_mkdir(mainsb.dir & "\DECRYPTED.dmg", "/var/root/Media/Cydia/AutoInstall")
+            For i As Integer = 0 To Customoptions.cont4
+                mainsb.hfsplus_add(mainsb.dir & "\IPSW\DECRYPTED.dmg", mainsb.dir & "\debs\private\var\root\Media\Cydia\AutoInstall\package" & Customoptions.cont4 & ".deb", "/var/root/Media/Cydia/AutoInstall/" & Customoptions.cont4 & ".deb")
+            Next
         End If
         ProgressBar1.Value = 65
         If stopdashit = True Then
@@ -172,7 +174,15 @@ Public Class ebuilding2
             Label1.Text = "Adding OTA filez (may take a bit)"
             Call mainsb.OTAbypass()
         End If
-
+        If Customoptions.add_deb = True Then
+            Label1.Text = "Adding Custom Debs..."
+            mainsb.hfsplus_mkdir(mainsb.dir & "\IPSW\DECRYPTED.dmg", "/var/root/Media")
+            mainsb.hfsplus_mkdir(mainsb.dir & "\IPSW\DECRYPTED.dmg", "/var/root/Media/Cydia")
+            mainsb.hfsplus_mkdir(mainsb.dir & "\IPSW\DECRYPTED.dmg", "/var/root/Media/Cydia/AutoInstall")
+            For i As Integer = 0 To Customoptions.cont4
+                mainsb.hfsplus_add(mainsb.dir & "\IPSW\DECRYPTED.dmg", mainsb.dir & "\debs\private\var\root\Media\Cydia\AutoInstall\package" & Customoptions.cont4 & ".deb", "/var/root/Media/Cydia/AutoInstall/" & Customoptions.cont4 & ".deb")
+            Next
+        End If
         If Customoptions.no_untether = False Then
             Label1.Text = "Adding Pod2G's gift..."
             Call mainsb.untether()

@@ -77,12 +77,13 @@
         cont4 += 1
         Try
             deb = ""
-            deb = mainsb.FileOpenDialog("*.deb", "Desktop")
+            deb = mainsb.FileOpenDialog2("*.deb", "Desktop")
             add_deb = True
         Catch Ex As Exception
             MsgBox(Err.Description)
         End Try
         My.Computer.FileSystem.CopyFile(deb, mainsb.dir & "\debs\private\var\root\Media\Cydia\AutoInstall\package" & cont4 & ".deb")
+
     End Sub
 
   

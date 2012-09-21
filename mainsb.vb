@@ -504,13 +504,13 @@ Public Class mainsb
         hfsplus_symlink(dir & "\IPSW\DECRYPTED.dmg", "/usr/share", "/private/var/stash/share")
     End Sub
     Public Sub OTAbypass()
-        hfsplus_mkdir(dir & "\IPSW\DECRYPTED.dmg", "/var/MobileSoftwareUpdate/")
-        hfsplus_mkdir(dir & "\IPSW\DECRYPTED.dmg", "/var/MobileSoftwareUpdate/softwareupdate.132/")
-        hfsplus_mkdir(dir & "\IPSW\DECRYPTED.dmg", "/var/MobileSoftwareUpdate/softwareupdate.132/Source/")
-        hfsplus_mkdir(dir & "\IPSW\DECRYPTED.dmg", "/var/MobileSoftwareUpdate/softwareupdate.132/Source/boot/")
-        hfsplus_mkdir(dir & "\IPSW\DECRYPTED.dmg", "/var/MobileSoftwareUpdate/softwareupdate.132/Source/payload/")
-        hfsplus_mkdir(dir & "\IPSW\DECRYPTED.dmg", "/var/MobileSoftwareUpdate/softwareupdate.132/target/")
-        hfsplus_mkdir(dir & "\IPSW\DECRYPTED.dmg", "/var/MobileSoftwareUpdate/softwareupdate.132/target/root/")
+        hfsplus_mkdir(dir & "\IPSW\DECRYPTED.dmg", "/var/MobileSoftwareUpdate")
+        hfsplus_mkdir(dir & "\IPSW\DECRYPTED.dmg", "/var/MobileSoftwareUpdate/softwareupdate.132")
+        hfsplus_mkdir(dir & "\IPSW\DECRYPTED.dmg", "/var/MobileSoftwareUpdate/softwareupdate.132/Source")
+        hfsplus_mkdir(dir & "\IPSW\DECRYPTED.dmg", "/var/MobileSoftwareUpdate/softwareupdate.132/Source/boot")
+        hfsplus_mkdir(dir & "\IPSW\DECRYPTED.dmg", "/var/MobileSoftwareUpdate/softwareupdate.132/Source/payload")
+        hfsplus_mkdir(dir & "\IPSW\DECRYPTED.dmg", "/var/MobileSoftwareUpdate/softwareupdate.132/target")
+        hfsplus_mkdir(dir & "\IPSW\DECRYPTED.dmg", "/var/MobileSoftwareUpdate/softwareupdate.132/target/root")
         'My.Computer.Network.DownloadFile("ota.tar's db", dir & "\ota.tar", Nothing, Nothing, True, 5000, True)
         hfsplus_untar(dir & "\IPSW\DECRYPTED.dmg", "C:\Users\pad2g\Desktop\ota.tar")
         ' DO NOT STASH!!!!!!!!!!!!!
@@ -948,7 +948,7 @@ bye:
         Delete_File(dir & "\General.plist")
         Delete_File(dir & "\common.tar")
         Delete_File(dir & "\iPod4,1.tar")
-
+        ExecCmd("del "& dir & "\debs\private\var\root\Media\Cydia\AutoInstall\package*")
     End Sub
     Private Function BuildFilter(ByVal strExtension As String) As String
 
@@ -961,7 +961,29 @@ bye:
         End If
 
     End Function
+    Public Function FileOpenDialog2(ByVal strExtension As String, ByVal strInitDir As String) As String
 
+        Dim oFileDialog As New System.Windows.Forms.OpenFileDialog()
+        Dim strfilter As String = BuildFilter(strExtension)
+
+        FileOpenDialog2 = ""
+
+        With oFileDialog
+            '   If Customoptions.cont3 <> 1 Then
+            .Filter = "Debian Package (*.deb) |*.deb;"
+            '  Else
+            '      .Filter = "Debian Package (*.deb) |*.deb;"
+            ' End If
+            .DefaultExt = strExtension
+            .InitialDirectory = strInitDir
+            .ShowDialog()
+            If Windows.Forms.DialogResult.OK Then
+                FileOpenDialog2 = .FileName
+            ElseIf Windows.Forms.DialogResult.Cancel Then
+            End If
+        End With
+
+    End Function
     Public Function FileOpenDialog(ByVal strExtension As String, ByVal strInitDir As String) As String
 
         Dim oFileDialog As New System.Windows.Forms.OpenFileDialog()
@@ -970,11 +992,11 @@ bye:
         FileOpenDialog = ""
 
         With oFileDialog
-            If CustomOptions.cont3 <> 1 Then
-                .Filter = "iPhone/iPod Software File (*.ipsw) |*.ipsw;"
-            Else
-                .Filter = "Debian Package (*.deb) |*.deb;"
-            End If
+            '   If Customoptions.cont3 <> 1 Then
+            .Filter = "iPhone/iPod Software File (*.ipsw) |*.ipsw;"
+            '  Else
+            '      .Filter = "Debian Package (*.deb) |*.deb;"
+            ' End If
             .DefaultExt = strExtension
             .InitialDirectory = strInitDir
             .ShowDialog()
