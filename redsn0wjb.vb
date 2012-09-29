@@ -62,4 +62,26 @@ Public Class redsn0wjb
     Private Sub redsn0wjb_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Form1.killItunes()
     End Sub
+
+    
+
+    Private Sub DoNotInstallUntetherHacksToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DoNotInstallUntetherHacksToolStripMenuItem.Click
+
+    End Sub
+
+    Private Sub UseCustomRamdiskToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UseCustomRamdiskToolStripMenuItem.Click
+
+    End Sub
+
+    Private Sub BootACustomKernelToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BootACustomKernelToolStripMenuItem.Click
+
+    End Sub
+
+    Private Sub InjectFileafc2ToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles InjectFileafc2ToolStripMenuItem.Click
+
+    End Sub
+
+    Private Sub CustomBootlogoToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CustomBootlogoToolStripMenuItem.Click
+
+    End Sub
 End Class
