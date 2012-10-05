@@ -7,10 +7,13 @@ Imports Ionic.Zip
 Imports System.Security.Cryptography
 Imports System.Text
 Imports System.Threading
+Imports MobileDevice
 Imports System.Windows.Forms
 Imports System.Management
 Imports ICSharpCode.SharpZipLib.GZip
 Public Class iRecovery
+    Public device As New MobileDevice.iPhone
+
     Private Property winstyle As ProcessWindowStyle
     Public key As String = "91866d7b929b971c72fa6e90530a5b2a361bed9486f2cb884b632f61253ed204"
     Public iv As String = "0dcee7d1b9982793558d588d84c44af0"
@@ -20,62 +23,85 @@ Public Class iRecovery
     Public Sub imagetoolInject(ByVal png As String, ByVal destinationimg3 As String, ByVal templateimg3 As String, ByVal iv As String, ByVal key As String)
         ExecCmd(mainsb.dir & "\imgtool\imagetool.exe inject " & png & " " & destinationimg3 & " " & templateimg3 & " " & iv & " " & key)
     End Sub
-    Public Structure am_device
-        Dim unknown0() As Char
-        Dim device_id As Integer
-        Dim product_id As Integer
-        Dim serial As Char
-        Dim unknown1 As Integer
-        Dim unknown2 As Integer
-        Dim lockdown_con As Integer
-        Dim unknown() As Char
-        Dim unknown4 As Integer
-        Dim unknown5() As Char
-    End Structure
-    Dim device As am_device
-    <DllImport("C:\Users\pad2g\Desktop\iTunesMobileDevice.dll")> Public Shared Function AMDeviceValidatePairing(ByVal device)
 
-    End Function
-    <DllImport("C:\Users\pad2g\Desktop\iTunesMobileDevice.dll")> Public Shared Function AMDevicePair(ByVal device)
-
-    End Function
-    <DllImport("C:\Users\pad2g\Desktop\iTunesMobileDevice.dll")> Public Shared Function AMDeviceEnterRecovery(ByVal device)
-
-    End Function
-    Private Sub iRecovery_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        SaveToDisk("iRecovery.exe", mainsb.dir & "\iRecovery.exe")
-
-    End Sub
     Public Function exitrecovery()
-        SaveToDisk("s-irecovery.exe", mainsb.dir & "\s-irecovery.exe")
-        ExecCmd(mainsb.dir & "\s-irecovery.exe -c " & Chr(34) & "setenv auto-boot true" & Chr(34), False)
-        ExecCmd(mainsb.dir & "\s-irecovery.exe -c " & Chr(34) & "saveenv" & Chr(34), False)
-        ExecCmd(mainsb.dir & "\s-irecovery.exe -c " & Chr(34) & "reboot" & Chr(34), False)
-        File_Delete(mainsb.dir & "\s-irecovery.exe")
+        SaveToDisk("iRecovery.exe", mainsb.dir & "\iRecovery.exe")
+        ExecCmd(mainsb.dir & "\iRecovery.exe -c " & Chr(34) & "setenv auto-boot true" & Chr(34), True)
+        ExecCmd(mainsb.dir & "\iRecovery.exe -c " & Chr(34) & "saveenv" & Chr(34), True)
+        ExecCmd(mainsb.dir & "\iRecovery.exe -c " & Chr(34) & "reboot" & Chr(34), True)
+        File_Delete(mainsb.dir & "\iRecovery.exe")
         MsgBox("Done :D", MsgBoxStyle.Information)
     End Function
     Private Sub PictureBox2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PictureBox2.Click
         exitrecovery()
     End Sub
-
+    Public Sub cmd(ByVal file As String, ByVal arg As String)
+        Dim procNlite As New Process
+        window = 1
+        procNlite.StartInfo.FileName = file
+        procNlite.StartInfo.Arguments = " " & arg
+        procNlite.StartInfo.WindowStyle = window
+        Application.DoEvents()
+        procNlite.Start()
+        Do Until procNlite.HasExited
+            Application.DoEvents()
+            For i = 0 To 5000000
+                Application.DoEvents()
+            Next
+        Loop
+        procNlite.WaitForExit()
+    End Sub
+    Private Property window As ProcessWindowStyle
+    Public Sub Delay(ByVal dblSecs As Double)
+        Const OneSec As Double = 1.0# / (1440.0# * 60.0#)
+        Dim dblWaitTil As Date
+        Now.AddSeconds(OneSec)
+        dblWaitTil = Now.AddSeconds(OneSec).AddSeconds(dblSecs)
+        Do Until Now > dblWaitTil
+            Application.DoEvents()
+        Loop
+    End Sub
+    Dim x64 As Boolean = False
     Private Sub PictureBox1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PictureBox1.Click
+        If device.IsConnected Then
+            If Not System.IO.File.Exists("C:\Program Files (x86)\Common Files\Apple\Apple Application Support\iPHUCWIN32.exe") Then
+                SaveToDisk("IPHUCWIN32.exe", "C:\Program Files (x86)\Common Files\Apple\Apple Application Support\iPHUCWIN32.exe")
+            End If
+            'maybe 
+            SaveToDisk("itunnel_mux_r61.exe", mainsb.dir & "\itunnel_mux_r61.exe")
+            'SaveToDisk("MobileDevice.dll", mainsb.dir & "\MobileDevice.dll")
+            If Not System.IO.File.Exists("C:\Program Files (x86)\Common Files\Apple\Apple Application Support\iPHUCWIN32.exe") Then
+                SaveToDisk("readline5.dll", mainsb.dir & "C:\Program Files (x86)\Common Files\Apple\Apple Application Support\readline5.dll")
+            End If
+            If System.IO.Directory.Exists("C:\Program Files (x86)\iTunes") Then
+                If System.Environment.Is64BitOperatingSystem.ToString = True Then
+                    cmd("C:\Program Files (x86)\Common Files\Apple\Apple Application Support\iPHUCWIN32.exe", "-qo enterrecovery")
+                Else
+                    cmd("C:\Program Files\Common Files\Apple\Apple Application Support\iPHUCWIN32.exe", "-qo enterrecovery")
+                End If
+                MsgBox("Successfully entered Recovery!", MsgBoxStyle.Information)
+                ' Exit Sub
+                '   AMDeviceValidatePairing(device)
+                '   AMDevicePair(device)
+                '  AMDeviceEnterRecovery(device)
+            Else
+                MsgBox("You have to install iTunes before continuing!", MsgBoxStyle.Exclamation)
+                Process.Start("http://www.apple.com/itunes/download/")
+            End If
+        Else
+            MsgBox("No iPhone Detected!", MsgBoxStyle.Exclamation)
+        End If
 
-        MsgBox("Available from next update")
-        Exit Sub
-        AMDeviceValidatePairing(device)
-        AMDevicePair(device)
-        AMDeviceEnterRecovery(device)
     End Sub
 
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
-        SaveToDisk("s-irecovery.exe", mainsb.dir & "\s-irecovery.exe")
-        ExecCmd(mainsb.dir & "\s-irecovery.exe -c " & TextBox1.Text, False)
-        File_Delete(mainsb.dir & "\s-irecovery.exe")
+        SaveToDisk("iRecovery.exe", mainsb.dir & "\iRecovery.exe")
+        ExecCmd(mainsb.dir & "\iRecovery.exe -c " & TextBox1.Text, False)
+        File_Delete(mainsb.dir & "\iRecovery.exe")
         TextBox1.Text = ""
     End Sub
 
     Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
-
 
         SaveToDisk("imgtool.zip", mainsb.dir & "\imgtool.zip")
         SaveToDisk("7za.exe", mainsb.dir & "\7za.exe")
@@ -152,5 +178,14 @@ Public Class iRecovery
         Button1.Show()
         Button2.Hide()
         Button3.Hide()
+    End Sub
+
+   
+    Private Sub DeviceInfosToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DeviceInfosToolStripMenuItem.Click
+        devinfos.Show()
+    End Sub
+
+    Private Sub iRecovery_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Form1.killItunes()
     End Sub
 End Class
